@@ -1,0 +1,225 @@
+/* ============================= */
+/* ===== Training Submenu (Columns) ===== */
+/* ============================= */
+.submenu {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* multiple columns */
+  gap: 10px;                /* spacing between items */
+  padding: 10px 15px;
+  margin-top: 0;             /* small gap below navbar */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.submenu ul {
+  display: contents;         /* let li items participate in the grid directly */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submenu li {
+  cursor: pointer;
+  color: #000000;  /* accent color */
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  transition: background 0.3s, color 0.3s;
+}
+
+.submenu li:hover,
+.submenu li.active {
+  color: #fff;
+  background-color: #3835f7;
+}
+
+/* ============================= */
+/* ===== Responsive Submenu ===== */
+/* ============================= */
+@media screen and (max-width: 768px) {
+  .submenu {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 6px 10px;
+  }
+  .submenu li {
+    flex: 0 0 auto; /* prevent shrinking */
+  }
+  .submenu::-webkit-scrollbar {
+    height: 6px;
+  }
+  .submenu::-webkit-scrollbar-thumb {
+    background-color: #00509d;
+    border-radius: 3px;
+  }
+}
+
+
+
+
+
+
+
+/* ============================= */
+/* ===== Main Content Padding ===== */
+/* ============================= */
+main {
+  padding-top: 0; /* no extra top padding, submenu above naturally */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* consistent vertical spacing */
+  box-sizing: border-box;
+}
+
+/* ============================= */
+/* ===== Race Section ===== */
+/* ============================= */
+.race-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+}
+
+/* ============================= */
+/* ===== Race Details Table ===== */
+/* ============================= */
+#race-details-wrapper {
+  display: block;
+}
+
+.race-details {
+  width: auto;
+  max-width: 500px;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.race-details th,
+.race-details td {
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.race-details th {
+  background-color: #00509d;
+  color: #fff;
+}
+
+.race-details tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ============================= */
+/* ===== Search Bar ===== */
+/* ============================= */
+.search-container {
+  position: relative;
+  width: 180px;
+  margin-bottom: 15px;
+}
+
+.search-container input {
+  width: 100%;
+  height: 28px;
+  padding: 4px 25px 4px 8px;
+  font-size: 12px;
+  border: 1px solid #00509d;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.search-container .clear-search {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #00509d;
+  font-size: 14px;
+}
+
+/* ============================= */
+/* ===== Race Table Styles ===== */
+/* ============================= */
+#race-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+#race-table {
+  width: max-content;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-size: 14px;
+}
+
+#race-table th,
+#race-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#race-table th {
+  background-color: #00509d;
+  color: #fff;
+}
+
+#race-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ============================= */
+/* ===== Highlighted Search Matches ===== */
+/* ============================= */
+.highlight {
+  background-color: #3835f7;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ============================= */
+/* ===== Pagination Styles ===== */
+/* ============================= */
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-start;  /* align left */
+  gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;              /* wrap on small screens */
+}
+
+.pagination-wrapper button {
+  padding: 4px 8px;
+  border: 1px solid #00509d;
+  background-color: #fff;
+  color: #00509d;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.pagination-wrapper button:hover:not(:disabled) {
+  background-color: #00509d;
+  color: #fff;
+}
+
+.pagination-wrapper button.active {
+  background-color: #00509d;
+  color: #fff;
+  font-weight: bold;
+}
+
+.pagination-wrapper button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

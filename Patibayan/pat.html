@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== Remix Icons ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <title>Patibayan Racing</title>
+
+  <!-- ===== Universal Stylesheet ===== -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- ===== Page-specific Stylesheet ===== -->
+  <link rel="stylesheet" href="/Patibayan/pat.css">
+
+  <!-- ===== Universal Script ===== -->
+  <script src="../script.js" defer></script>
+
+  <!-- ===== Page-specific Script ===== -->
+  <script src="/Patibayan/pat.js" defer></script>
+</head>
+<body>
+  <main>
+
+  <!-- ===== Submenu ===== -->
+  <nav class="submenu" id="patibayan-submenu">
+    <ul></ul>
+  </nav>
+
+  <!-- ===== Race Section ===== -->
+  <section class="race-section">
+
+    <!-- ===== Top Row: Search only ===== -->
+    <div class="top-row">
+      <div class="race-info-container">
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Search results...">
+          <span id="clearSearch" class="clear-search">✕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Patibayan Table ===== -->
+    <div id="patibayan-table-wrapper">
+      <table id="patibayan-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- ===== Pagination ===== -->
+    <div id="pagination-wrapper" class="pagination-wrapper"></div>
+  </section>
+</main>
+
+
+</body>
+</html>

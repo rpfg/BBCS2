@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== Remix Icons (for navbar burger menu and icons) ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- ===== Page Title (visible in browser tab) ===== -->
+  <title>BBC Training</title>
+
+  <!-- ===== Universal Stylesheet (applies to all pages) ===== -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- ===== Page-specific Stylesheet (only for Training page) ===== -->
+  <link rel="stylesheet" href="/training/train.css">
+
+  <!-- ===== Universal Script (inserts navbar and footer) ===== -->
+  <script src="../script.js" defer></script>
+
+  <!-- ===== Page-specific Script (only for Training page) ===== -->
+  <script src="/training/train.js" defer></script>
+</head>
+<body>
+  <main>
+  <!-- ===== Submenu ===== -->
+  <div class="submenu" id="training-submenu">
+    <ul>
+      <!-- Submenu items dynamically inserted -->
+    </ul>
+  </div>
+
+  <!-- Race Section -->
+  <section class="race-section">
+    <!-- Race Details Table -->
+    <div id="race-details-wrapper">
+      <!-- Race Details Table inserted here dynamically -->
+    </div>
+
+    <!-- ===== Search Bar ===== -->
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search results...">
+      <span id="clearSearch" class="clear-search">✕</span>
+    </div>
+
+    <!-- Race Results Table -->
+    <div id="race-table-wrapper">
+      <table id="race-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="pagination-wrapper" class="pagination-wrapper"></div>
+
+  </section>
+</main>
+
+
+</body>
+</html>

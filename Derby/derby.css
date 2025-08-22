@@ -1,0 +1,255 @@
+/* ============================= */
+/* ===== Main Content ===== */
+/* ============================= */
+main {
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-sizing: border-box;
+}
+
+/* ============================= */
+/* ===== Tables Styling ===== */
+/* ============================= */
+.race-details,
+.lap-winners,
+#race-table {
+  width: auto;
+  max-width: 500px;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.race-details th,
+.race-details td,
+.lap-winners th,
+.lap-winners td,
+#race-table th,
+#race-table td {
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.race-details th,
+.lap-winners th,
+#race-table th {
+  background-color: #00509d;
+  color: #fff;
+}
+
+.race-details tbody tr:nth-child(even),
+.lap-winners tbody tr:nth-child(even),
+#race-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Race Table specific */
+#race-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+#race-table {
+  width: max-content;
+  font-size: 14px;
+}
+
+#race-table th,
+#race-table td {
+  white-space: nowrap;
+  padding: 10px;
+}
+
+/* Lap Winners Table */
+#lap-winners-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+#lap-winners-wrapper table.lap-winners {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+#lap-winners-wrapper table.lap-winners th,
+#lap-winners-wrapper table.lap-winners td {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  word-wrap: break-word;
+}
+
+/* ============================= */
+/* ===== Search Bar ===== */
+/* ============================= */
+.search-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+  order: 0;
+}
+
+.search-container input {
+  width: 100%;
+  height: 32px;
+  padding: 4px 30px 4px 8px;
+  font-size: 14px;
+  border: 1px solid #00509d;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.search-container .clear-search {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #00509d;
+  font-size: 16px;
+}
+
+/* Highlighted search matches */
+.highlight {
+  background-color: #3835f7;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ============================= */
+/* ===== Pagination ===== */
+/* ============================= */
+.pagination-wrapper {
+  margin-top: 15px;
+  display: flex;
+  gap: 5px;
+}
+
+.pagination-wrapper button {
+  padding: 4px 8px;
+  border: 1px solid #00509d;
+  background-color: #fff;
+  color: #00509d;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pagination-wrapper button.active {
+  background-color: #3835f7;
+  color: #fff;
+}
+
+.pagination-wrapper button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* ===== Derby Message ===== */
+/* ============================= */
+.derby-message {
+  padding: 12px 16px;
+  margin: 15px auto 12px auto;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  border-radius: 5px;
+  max-width: 600px;
+  text-align: center;
+}
+
+/* ============================= */
+/* ===== Mobile Layout ===== */
+/* ============================= */
+@media screen and (max-width: 768px) {
+  /* Top row stack */
+  .top-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #race-details-wrapper,
+  #lap-winners-wrapper,
+  #race-table-wrapper {
+    min-width: 100%;
+    overflow-x: auto;
+    margin-bottom: 5px;
+  }
+
+  #lap-winners-wrapper {
+    order: 1;
+  }
+
+  .search-container {
+    order: 2;
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .search-container input {
+    font-size: 14px;
+    height: 32px;
+    padding: 4px 10px;
+  }
+
+  .search-container .clear-search {
+    font-size: 16px;
+  }
+
+  .race-details,
+  #race-table {
+    width: max-content;
+    min-width: 100%;
+    margin-bottom: 5px;
+  }
+
+  #lap-winners-wrapper table.lap-winners th,
+  #lap-winners-wrapper table.lap-winners td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================= */
+/* ===== Desktop Layout Tweaks ===== */
+/* ============================= */
+@media screen and (min-width: 769px) {
+  .top-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  #race-details-wrapper {
+    flex: 2;
+    min-width: 300px;
+  }
+
+  #lap-winners-wrapper {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .race-details,
+  .lap-winners {
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+  }
+
+  .search-container {
+    margin-bottom: 10px;
+  }
+}

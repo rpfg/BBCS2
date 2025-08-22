@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Navbar</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    .navbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #ffffff;
+        padding: 15px;
+    }
+    .navbar a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .logo {
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .list {
+        list-style: none;
+        display: flex; 
+        gap: 25px;
+    }
+    #toggler,
+    .navbar label {
+        display: none;
+    }
+
+    /* Mobile Styles */
+    @media screen and (max-width: 600px) {
+        .menu {
+            width: 100%;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .list {
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .navbar label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        #toggler:checked ~ .menu {
+            max-height: 500px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="logo">LOGO</a>
+    <input type="checkbox" id="toggler">
+    <label for="toggler"><i class="ri-menu-line"></i></label>
+    <div class="menu">
+      <ul class="list">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+</body>
+</html>
