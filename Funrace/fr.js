@@ -288,8 +288,3 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener('resize', moveSearch);
 window.addEventListener('load', moveSearch);
 
-let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(moveSearch, 100);
-});
