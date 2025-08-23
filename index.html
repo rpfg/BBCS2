@@ -6,23 +6,30 @@
   <title>Race Results - Home</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Page-specific styles (home only) -->
+  <link rel="stylesheet" href="home.css">
 </head>
 <body>
-
-  <!-- JS will inject the responsive navbar -->
-
-  <!-- ===== Main Content ===== -->
-  <div class="container">
+  <!-- Heading Section -->
+  <div class="intro">
     <h1>Welcome to BBC Cavite-Laguna Race Results</h1>
-    <p>Check all the race results, updates and get to know BBC Family.</p>
-
-    <!-- Poster Carousel -->
-    <div class="poster-carousel">
-      <div class="poster"><img src="images/BBCPOSTER2.png" alt="Poster 1"></div>
-    </div>
+    <p>Check all the race results, updates, and get to know BBC Family.</p>
   </div>
+
+  <!-- Posters Section -->
+<div class="poster-container">
+  <img src="images/BBCINTER.jpg" alt="Poster 1" class="poster">
+  <img src="images/BBCPOSTER2.png" alt="Poster 2" class="poster active"> <!-- default poster -->
+  <img src="images/BBCDERBY.jpg" alt="Poster 3" class="poster">
+  <img src="images/BracketPoster.png" alt="Poster 4" class="poster">
+</div>
+
 
   <!-- JS injects navbar + footer -->
   <script src="script.js"></script>
+
+    <!-- Page-specific scripts (home only) -->
+  <script src="home.js"></script>
 </body>
 </html>
