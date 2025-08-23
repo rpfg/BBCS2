@@ -240,12 +240,20 @@ function moveSearch() {
   const raceDetails = document.getElementById('race-details-wrapper');
   const raceTable = document.getElementById('race-table-wrapper');
 
+  // Mobile layout
   if (window.innerWidth <= 768) {
-    raceSection.insertBefore(search, raceTable);
-  } else {
-    raceDetails.parentNode.insertBefore(search, raceDetails.nextSibling);
+    if (search.parentNode !== raceSection || search.nextSibling !== raceTable) {
+      raceSection.insertBefore(search, raceTable);
+    }
+  } 
+  // Desktop layout
+  else {
+    if (search.parentNode !== raceDetails.parentNode || search.previousSibling !== raceDetails) {
+      raceDetails.parentNode.insertBefore(search, raceDetails.nextSibling);
+    }
   }
 }
+
 
 // =============================
 // ===== Initialization =====
@@ -258,3 +266,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener('resize', moveSearch);
 window.addEventListener('load', moveSearch);
+
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(moveSearch, 100);
+});
+
