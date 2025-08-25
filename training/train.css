@@ -3,16 +3,16 @@
 /* ============================= */
 .submenu {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* multiple columns */
-  gap: 10px;                /* spacing between items */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
   padding: 10px 15px;
-  margin-top: 0;             /* small gap below navbar */
+  margin-top: 0;
   box-sizing: border-box;
   width: 100%;
 }
 
 .submenu ul {
-  display: contents;         /* let li items participate in the grid directly */
+  display: contents;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -20,7 +20,7 @@
 
 .submenu li {
   cursor: pointer;
-  color: #000000;  /* accent color */
+  color: #000;
   padding: 6px 12px;
   border-radius: 5px;
   font-weight: bold;
@@ -46,7 +46,7 @@
     padding: 6px 10px;
   }
   .submenu li {
-    flex: 0 0 auto; /* prevent shrinking */
+    flex: 0 0 auto;
   }
   .submenu::-webkit-scrollbar {
     height: 6px;
@@ -57,20 +57,14 @@
   }
 }
 
-
-
-
-
-
-
 /* ============================= */
 /* ===== Main Content Padding ===== */
 /* ============================= */
 main {
-  padding-top: 0; /* no extra top padding, submenu above naturally */
+  padding-top: 0;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* consistent vertical spacing */
+  gap: 15px;
   box-sizing: border-box;
 }
 
@@ -117,109 +111,105 @@ main {
 }
 
 /* ============================= */
-/* ===== Search Bar ===== */
+/* ===== Bracket Submenu ===== */
 /* ============================= */
-.search-container {
-  position: relative;
-  width: 180px;
-  margin-bottom: 15px;
+#bracket-submenu {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.search-container input {
-  width: 100%;
-  height: 28px;
-  padding: 4px 25px 4px 8px;
-  font-size: 12px;
-  border: 1px solid #00509d;
-  border-radius: 5px;
-  box-sizing: border-box;
+#bracket-submenu ul {
+  display: flex;       /* horizontal layout */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 8px;
+  flex-wrap: nowrap;   /* no wrapping on desktop */
+  overflow-x: visible; /* show all items on desktop */
 }
 
-.search-container .clear-search {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
+#bracket-submenu li {
   cursor: pointer;
-  color: #00509d;
-  font-size: 14px;
-}
-
-/* ============================= */
-/* ===== Race Table Styles ===== */
-/* ============================= */
-#race-table-wrapper {
-  overflow-x: auto;
-  max-width: 100%;
-}
-
-#race-table {
-  width: max-content;
-  border-collapse: collapse;
-  table-layout: auto;
-  font-size: 14px;
-}
-
-#race-table th,
-#race-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #f2f2f2;
+  transition: background 0.3s, color 0.3s;
   white-space: nowrap;
 }
 
-#race-table th {
-  background-color: #00509d;
-  color: #fff;
-}
-
-#race-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* ============================= */
-/* ===== Highlighted Search Matches ===== */
-/* ============================= */
-.highlight {
+#bracket-submenu li.active,
+#bracket-submenu li:hover {
   background-color: #3835f7;
   color: #fff;
-  font-weight: bold;
 }
 
 /* ============================= */
-/* ===== Pagination Styles ===== */
+/* ===== Mobile Adjustments ===== */
 /* ============================= */
-.pagination-wrapper {
-  display: flex;
-  justify-content: flex-start;  /* align left */
-  gap: 5px;
-  margin-top: 10px;
-  flex-wrap: wrap;              /* wrap on small screens */
+@media screen and (max-width: 768px) {
+  #bracket-submenu ul {
+    gap: 6px;
+    padding: 0 5px;
+    overflow-x: auto; /* enable scroll only on mobile */
+  }
+  #bracket-submenu li {
+    padding: 5px 10px;
+  }
 }
 
-.pagination-wrapper button {
-  padding: 4px 8px;
-  border: 1px solid #00509d;
-  background-color: #fff;
-  color: #00509d;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.2s;
+
+/* ============================= */
+/* ===== Bracket Tables Wrapper (Scrollable) ===== */
+/* ============================= */
+#bracket-tables-wrapper {
+  width: 100%;
+  overflow-x: auto;       /* enable horizontal scroll if needed */
 }
 
-.pagination-wrapper button:hover:not(:disabled) {
-  background-color: #00509d;
+/* ============================= */
+/* ===== Bracket Tables Auto-Fit ===== */
+/* ============================= */
+.bracket-table {
+  width: max-content;      /* fit content */
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 15px;
+  table-layout: auto;      /* auto adjust column widths */
+}
+
+
+.bracket-table th,
+.bracket-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.bracket-table th {
+  background-color: #00509d; /* Blue header */
   color: #fff;
 }
 
-.pagination-wrapper button.active {
-  background-color: #00509d;
-  color: #fff;
-  font-weight: bold;
+.bracket-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Alternate row color */
 }
 
-.pagination-wrapper button:disabled {
-  opacity: 0.5;
-  cursor: default;
+.bracket-table tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* Odd rows white */
+}
+
+/* Hover effect for rows */
+.bracket-table tbody tr:hover {
+  background-color: #c6d4ff; /* Soft highlight on hover */
+}
+
+/* ============================= */
+/* ===== Responsive Tables ===== */
+/* ============================= */
+@media screen and (max-width: 768px) {
+  .bracket-table {
+    font-size: 12px;
+  }
 }
