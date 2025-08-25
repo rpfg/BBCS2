@@ -178,3 +178,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   const sheetNames = await generateSubmenu();
   if (sheetNames.length) loadSheetWithBrackets(sheetNames[0]);
 });
+
