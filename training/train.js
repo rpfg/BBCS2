@@ -8,11 +8,11 @@ const API_KEY = "AIzaSyBGKe-HWRSjETakWez_QDuxWFCmeulQgEk";
 /* ===== Default and Custom Configs ===== */
 const defaultConfig = {
   brackets: {
-    1: { startRow: 2, endRow: 14, cols: [0,1,2,3,4] },   // A-E
-    2: { startRow: 2, endRow: 14, cols: [6,7,8,9,10] },  // G-K
-    3: { startRow: 18, endRow: 29, cols: [0,1,2,3,4] },
-    4: { startRow: 18, endRow: 29, cols: [6,7,8,9,10] },
-    5: { startRow: 33, endRow: 44, cols: [0,1,2,3,4] },
+    1: { startRow: 2, endRow: 13, cols: [0,1,2,3,4] },   // A-E
+    2: { startRow: 2, endRow: 13, cols: [6,7,8,9,10] },  // G-K
+    3: { startRow: 17, endRow: 28, cols: [0,1,2,3,4] },
+    4: { startRow: 17, endRow: 28, cols: [6,7,8,9,10] },
+    5: { startRow: 32, endRow: 43, cols: [0,1,2,3,4] },
   },
   raceDetails: { startRow: 2, endRow: 9, cols: [13,14] } // N-O
 };
@@ -20,11 +20,11 @@ const defaultConfig = {
 const customConfigs = {
   "Pulilan and San Simon": {
     brackets: {
-      1: { startRow: 2, endRow: 15, cols: [0,1,2,3,4,5,6,7] },        // A-H
-      2: { startRow: 2, endRow: 15, cols: [9,10,11,12,13,14,15,16] },  // J-Q
-      3: { startRow: 17, endRow: 30, cols: [0,1,2,3,4,5,6,7] },
-      4: { startRow: 17, endRow: 30, cols: [9,10,11,12,13,14,15,16] },
-      5: { startRow: 32, endRow: 45, cols: [0,1,2,3,4,5,6,7] },
+      1: { startRow: 2, endRow: 16, cols: [0,1,2,3,4,5,6,7] },        // A-H
+      2: { startRow: 2, endRow: 16, cols: [9,10,11,12,13,14,15,16] },  // J-Q
+      3: { startRow: 18, endRow: 31, cols: [0,1,2,3,4,5,6,7] },
+      4: { startRow: 18, endRow: 31, cols: [9,10,11,12,13,14,15,16] },
+      5: { startRow: 33, endRow: 46, cols: [0,1,2,3,4,5,6,7] },
     },
     raceDetails: { startRow: 2, endRow: 9, cols: [19,20] } // T-U
   }
