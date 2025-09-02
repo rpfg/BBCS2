@@ -22,9 +22,9 @@ const customConfigs = {
     brackets: {
       1: { startRow: 2, endRow: 16, cols: [0,1,2,3,4,5,6,7] },        // A-H
       2: { startRow: 2, endRow: 16, cols: [9,10,11,12,13,14,15,16] },  // J-Q
-      3: { startRow: 18, endRow: 31, cols: [0,1,2,3,4,5,6,7] },
-      4: { startRow: 18, endRow: 31, cols: [9,10,11,12,13,14,15,16] },
-      5: { startRow: 33, endRow: 46, cols: [0,1,2,3,4,5,6,7] },
+      3: { startRow: 18, endRow: 32, cols: [0,1,2,3,4,5,6,7] },
+      4: { startRow: 18, endRow: 32, cols: [9,10,11,12,13,14,15,16] },
+      5: { startRow: 34, endRow: 48, cols: [0,1,2,3,4,5,6,7] },
     },
     raceDetails: { startRow: 2, endRow: 9, cols: [19,20] } // T-U
   }
