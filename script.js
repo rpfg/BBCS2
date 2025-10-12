@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <ul class="list">
           <li><a href="index.html">Home</a></li>
           <li><a href="Funrace/fr.html">Funrace</a></li>
-          <li><a href="Derby/derby.html">Derby</a></li>
+          <li><a href="../Derby/derby.html">Derby</a></li>
           <li><a href="Patibayan/pat.html">Patibayan</a></li>
         </ul>
       </div>
