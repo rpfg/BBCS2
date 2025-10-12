@@ -3,22 +3,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbarHTML = `
     <nav class="navbar">
       <div class="logo-container">
-        <a href="/index.html" class="logo">
+        <a href="/BBCS2/index.html" class="logo">
           <img src="/BBCS2/images/BBCLOGO.png" alt="BBC Logo" class="logo-img">
         </a>
         <span class="logo-message">BBC Cavite Laguna NDR S2</span>
       </div>
       <input type="checkbox" id="toggler">
       <label for="toggler"><i class="ri-menu-line"></i></label>
-<div class="menu">
-  <ul class="list">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="Funrace/fr.html">Funrace</a></li>
-    <li><a href="Derby/derby.html">Derby</a></li>
-    <li><a href="Patibayan/pat.html">Patibayan</a></li>
-  </ul>
-</div>
-
+      <div class="menu">
+        <ul class="list">
+          <li><a href="/BBCS2/index.html">Home</a></li>
+          <li><a href="/BBCS2/Funrace/fr.html">Funrace</a></li>
+          <li><a href="/BBCS2/Derby/derby.html">Derby</a></li>
+          <li><a href="/BBCS2/Patibayan/pat.html">Patibayan</a></li>
+        </ul>
+      </div>
     </nav>
   `;
   document.body.insertAdjacentHTML("afterbegin", navbarHTML);
