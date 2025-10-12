@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbarHTML = `
     <nav class="navbar">
       <div class="logo-container">
-        <a href="/index.html" class="logo">
+        <a href="/Derby/derby.html" class="logo">
           <img src="/images/BBCLOGO.png" alt="BBC Logo" class="logo-img">
         </a>
         <span class="logo-message">BBC Cavite Laguna NDR S2</span>
