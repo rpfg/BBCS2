@@ -12,10 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
       <label for="toggler"><i class="ri-menu-line"></i></label>
       <div class="menu">
         <ul class="list">
-          <li><a href="/BBCS2/index.html">Home</a></li>
-          <li><a href="/BBCS2/Funrace/fr.html">Funrace</a></li>
-          <li><a href="/BBCS2/Derby/derby.html">Derby</a></li>
-          <li><a href="/BBCS2/Patibayan/pat.html">Patibayan</a></li>
+          <li><a href="BBCS2/index.html">Home</a></li>
+          <li><a href="BBCS2/Funrace/fr.html">Funrace</a></li>
+          <li><a href="BBCS2/Derby/derby.html">Derby</a></li>
+          <li><a href="BBCS2/Patibayan/pat.html">Patibayan</a></li>
         </ul>
       </div>
     </nav>
