@@ -13,11 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="menu">
         <ul class="list">
           <li><a href="/index.html">Home</a></li>
-          <li><a href="/training/train.html">Training</a></li>
           <li><a href="/Funrace/fr.html">Funrace</a></li>
           <li><a href="/Derby/derby.html">Derby</a></li>
           <li><a href="/Patibayan/pat.html">Patibayan</a></li>
-          <li><a href="/Coordinators/coor.html">Coordinators</a></li>
         </ul>
       </div>
     </nav>
@@ -37,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const navLinks = document.querySelectorAll(".navbar ul li a");
 
   navLinks.forEach(link => {
-    if (link.getAttribute("href") === currentPath || link.getAttribute("href") === currentPath + "/") {
+    const linkPath = link.getAttribute("href").replace(/\/$/, "");
+    if (linkPath === currentPath) {
       link.classList.add("active");
     }
   });
@@ -51,19 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.style.top = navbarHeight + "px";
   }
 
-  window.setTimeout(setMenuTop, 50); // wait for fonts/logo to load
+  window.setTimeout(setMenuTop, 50); // wait for logo/fonts to load
   window.addEventListener("resize", setMenuTop);
 });
-
-// ====== Highlight Active Nav Link ======
-const currentPath = window.location.pathname.replace(/\/$/, ""); // remove trailing slash
-const navLinks = document.querySelectorAll(".navbar ul li a");
-
-navLinks.forEach(link => {
-  const linkPath = link.getAttribute("href").replace(/\/$/, ""); // remove trailing slash
-  if (linkPath === currentPath) {
-    link.classList.add("active");
-  }
-});
-
-
