@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="menu">
   <ul class="list">
     <li><a href="index.html">Home</a></li>
-    <li><a href="/BBCS2/Funrace/fr.html">Funrace</a></li>
-    <li><a href="/BBCS2/Derby/derby.html">Derby</a></li>
-    <li><a href="/BBCS2/Patibayan/pat.html">Patibayan</a></li>
+    <li><a href="Funrace/fr.html">Funrace</a></li>
+    <li><a href="Derby/derby.html">Derby</a></li>
+    <li><a href="Patibayan/pat.html">Patibayan</a></li>
   </ul>
 </div>
 
