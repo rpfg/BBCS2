@@ -12,7 +12,6 @@ main {
 /* ============================= */
 /* ===== Tables Styling ===== */
 /* ============================= */
-.race-details,
 .lap-winners,
 #race-table {
   width: auto;
@@ -23,8 +22,6 @@ main {
   margin-bottom: 15px;
 }
 
-.race-details th,
-.race-details td,
 .lap-winners th,
 .lap-winners td,
 #race-table th,
@@ -34,14 +31,12 @@ main {
   text-align: left;
 }
 
-.race-details th,
 .lap-winners th,
 #race-table th {
   background-color: #00509d;
   color: #fff;
 }
 
-.race-details tbody tr:nth-child(even),
 .lap-winners tbody tr:nth-child(even),
 #race-table tbody tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -132,6 +127,8 @@ main {
   margin-top: 15px;
   display: flex;
   gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .pagination-wrapper button {
@@ -160,8 +157,8 @@ main {
 .derby-message {
   padding: 12px 16px;
   margin: 15px auto 12px auto;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #333;
   border-radius: 5px;
   max-width: 600px;
@@ -169,26 +166,52 @@ main {
 }
 
 /* ============================= */
+/* ===== Derby Menu (OB/YB Tabs) ===== */
+/* ============================= */
+.derby-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px auto 15px auto;
+}
+
+.derby-menu button {
+  background: #f2f2f2;
+  border: 1px solid #00509d;
+  padding: 8px 18px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #00509d;
+  font-weight: 500;
+}
+
+.derby-menu button:hover {
+  background: #e0e0e0;
+}
+
+.derby-menu button.active {
+  background: #00509d;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ============================= */
 /* ===== Mobile Layout ===== */
 /* ============================= */
 @media screen and (max-width: 768px) {
-  /* Top row stack */
   .top-row {
     display: flex;
     flex-direction: column;
     gap: 5px;
   }
 
-  #race-details-wrapper,
   #lap-winners-wrapper,
   #race-table-wrapper {
     min-width: 100%;
     overflow-x: auto;
     margin-bottom: 5px;
-  }
-
-  #lap-winners-wrapper {
-    order: 1;
   }
 
   .search-container {
@@ -207,7 +230,6 @@ main {
     font-size: 16px;
   }
 
-  .race-details,
   #race-table {
     width: max-content;
     min-width: 100%;
@@ -219,10 +241,20 @@ main {
     padding: 8px;
     font-size: 0.9rem;
   }
+
+  .derby-menu {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .derby-menu button {
+    flex: 1 1 45%;
+    padding: 8px;
+  }
 }
 
 /* ============================= */
-/* ===== Desktop Layout Tweaks ===== */
+/* ===== Desktop Layout ===== */
 /* ============================= */
 @media screen and (min-width: 769px) {
   .top-row {
@@ -232,17 +264,11 @@ main {
     align-items: flex-start;
   }
 
-  #race-details-wrapper {
-    flex: 2;
-    min-width: 300px;
-  }
-
   #lap-winners-wrapper {
     flex: 1;
-    min-width: 200px;
+    min-width: 250px;
   }
 
-  .race-details,
   .lap-winners {
     width: 100%;
     max-width: 100%;
