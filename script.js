@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <nav class="navbar">
       <div class="logo-container">
         <a href="/index.html" class="logo">
-          <img src="/BBCS2/images/BBCLOGO.png" alt="BBC Logo" class="logo-img">
+          <img src="images/BBCLOGO.png" alt="BBC Logo" class="logo-img">
         </a>
         <span class="logo-message">BBC Cavite Laguna NDR S2</span>
       </div>
