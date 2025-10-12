@@ -10,39 +10,34 @@
   <title>BBC Funrace</title>
 
   <!-- ===== Universal Stylesheet ===== -->
-  <link rel="stylesheet" href="/BBCS2/style.css">
+  <link rel="stylesheet" href="../style.css">
 
   <!-- ===== Page-specific Stylesheet ===== -->
-  <link rel="stylesheet" href="/BBCS2/Derby/derby.css">
+  <link rel="stylesheet" href="/Derby/derby.css">
 
   <!-- ===== Universal Script ===== -->
-  <script src="/BBCS2/script.js" defer></script>
+  <script src="../script.js" defer></script>
 
   <!-- ===== Page-specific Script ===== -->
-  <script src="/BBCS2/Derby/derby.js" defer></script>
+  <script src="/Derby/derby.js" defer></script>
 </head>
 <body>
   <main>
-
     <!-- ===== Race Section ===== -->
     <section class="race-section">
       
-        <div id="derby-message" class="derby-message">
-    Derby
-  </div>
 
-      <!-- ===== Top Row: Race Details + Search | Lap Winners ===== -->
+
+      <!-- ===== Submenu: OB / YB ===== -->
+      <div id="derby-menu" class="derby-menu"></div>
+
+      <!-- ===== Top Row: Search + Lap Winners ===== -->
       <div class="top-row">
-        <!-- Container: Race Details + Search -->
-        <div class="race-info-container">
-          <div id="race-details-wrapper">
-            <!-- Race details table will be injected here -->
-          </div>
 
-          <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search results...">
-            <span id="clearSearch" class="clear-search">✕</span>
-          </div>
+        <!-- Search Bar -->
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Search results...">
+          <span id="clearSearch" class="clear-search">✕</span>
         </div>
 
         <!-- Lap Winners -->
