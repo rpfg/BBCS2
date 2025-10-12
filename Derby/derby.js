@@ -5,9 +5,10 @@
 // ---------- Constants & Globals ----------
 const SHEET_ID = "1_dOyGKf8mrPJJlqGWWRU8B_TObvE5o-wuf3OqErAz4o";
 const API_KEY = "AIzaSyBGKe-HWRSjETakWez_QDuxWFCmeulQgEk";
-const derbySheet = "DERBY";
+let currentSheet = "OB"; // default to Old Bird
 
 let allRows = [];
+let filteredRows = [];
 let currentPage = 1;
 const rowsPerPage = 50;
 
@@ -23,11 +24,9 @@ async function loadSheet(sheetName) {
   const table = document.getElementById("race-table");
   const tbody = table.querySelector("tbody");
   const thead = table.querySelector("thead");
-  const detailsWrapper = document.getElementById("race-details-wrapper");
   const lapWrapper = document.getElementById("lap-winners-wrapper");
 
   tbody.innerHTML = "";
-  detailsWrapper.innerHTML = "";
   lapWrapper.innerHTML = "";
   thead.innerHTML = "";
 
@@ -39,7 +38,6 @@ async function loadSheet(sheetName) {
       return; 
     }
 
-    buildRaceDetails(data.values, detailsWrapper);
     buildLapWinnersTable(data.values);
     buildRaceTable(data.values, table);
 
@@ -49,30 +47,10 @@ async function loadSheet(sheetName) {
   }
 }
 
-// ----------------- Race Details Table -----------------
-function buildRaceDetails(values, wrapper) {
-  const detailsRowIndex = values.findIndex(row => row.includes("Race Details"));
-  if (detailsRowIndex === -1) return;
-
-  const colIndex = values[detailsRowIndex].indexOf("Race Details");
-  let html = `<table class="race-details"><tr><th colspan="2">${values[detailsRowIndex][colIndex]}</th></tr>`;
-
-  for (let r = detailsRowIndex + 1; r < values.length; r++) {
-    const row = values[r] || [];
-    const left = row[22] || "";  // Column W
-    const right = row[23] || ""; // Column X
-    if (left === "" && right === "") continue;
-    html += `<tr><td>${left}</td><td>${right}</td></tr>`;
-  }
-  html += "</table>";
-  wrapper.innerHTML = html;
-}
-
 // ----------------- Lap Winners Table -----------------
 function buildLapWinnersTable(values) {
   const wrapper = document.getElementById("lap-winners-wrapper");
   
-  // Columns S (18) to V (21) → 4 columns
   const tableData = values.map(row => [row[18]||"", row[19]||"", row[20]||"", row[21]||""])
                           .filter(r => r.some(c => c));
   
@@ -90,7 +68,6 @@ function buildLapWinnersTable(values) {
   html += `</tbody></table>`;
   wrapper.innerHTML = html;
 }
-
 
 // ----------------- Race Results Table -----------------
 function buildRaceTable(values, table) {
@@ -111,9 +88,10 @@ function buildRaceTable(values, table) {
   allRows = values.slice(headerIndex + 1)
                   .map(r => r.slice(0,12))
                   .filter(r => r.some(c => c && c.toString().trim() !== ""));
+  filteredRows = [...allRows];
 
   currentPage = 1;
-  renderTablePage(allRows, currentPage);
+  renderTablePage(filteredRows, currentPage);
 }
 
 // =============================
@@ -147,14 +125,12 @@ function setupPagination(rows, activePage) {
   const totalPages = Math.ceil(rows.length / rowsPerPage);
   if (totalPages <= 1) return;
 
-  // Previous button
   const prevBtn = document.createElement("button");
   prevBtn.innerText = "<";
   prevBtn.disabled = activePage === 1;
-  prevBtn.onclick = () => { currentPage--; renderTablePage(allRows, currentPage); };
+  prevBtn.onclick = () => { currentPage--; renderTablePage(filteredRows, currentPage); };
   wrapper.appendChild(prevBtn);
 
-  // Determine visible pages (max 5)
   let startPage = Math.max(1, activePage - 2);
   let endPage = Math.min(totalPages, startPage + 4);
   if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
@@ -162,7 +138,7 @@ function setupPagination(rows, activePage) {
   if (startPage > 1) {
     const first = document.createElement("button");
     first.innerText = "1";
-    first.onclick = () => { currentPage = 1; renderTablePage(allRows, currentPage); };
+    first.onclick = () => { currentPage = 1; renderTablePage(filteredRows, currentPage); };
     wrapper.appendChild(first);
 
     if (startPage > 2) {
@@ -176,7 +152,7 @@ function setupPagination(rows, activePage) {
     const btn = document.createElement("button");
     btn.innerText = i;
     if (i === activePage) btn.classList.add("active");
-    btn.onclick = () => { currentPage = i; renderTablePage(allRows, currentPage); };
+    btn.onclick = () => { currentPage = i; renderTablePage(filteredRows, currentPage); };
     wrapper.appendChild(btn);
   }
 
@@ -188,20 +164,19 @@ function setupPagination(rows, activePage) {
     }
     const last = document.createElement("button");
     last.innerText = totalPages;
-    last.onclick = () => { currentPage = totalPages; renderTablePage(allRows, currentPage); };
+    last.onclick = () => { currentPage = totalPages; renderTablePage(filteredRows, currentPage); };
     wrapper.appendChild(last);
   }
 
-  // Next button
   const nextBtn = document.createElement("button");
   nextBtn.innerText = ">";
   nextBtn.disabled = activePage === totalPages;
-  nextBtn.onclick = () => { currentPage++; renderTablePage(allRows, currentPage); };
+  nextBtn.onclick = () => { currentPage++; renderTablePage(filteredRows, currentPage); };
   wrapper.appendChild(nextBtn);
 }
 
 // =============================
-// ===== Search & Highlight =====
+// ===== Universal Search =====
 // =============================
 function setupSearch() {
   const searchInput = document.getElementById("searchInput");
@@ -209,61 +184,74 @@ function setupSearch() {
 
   searchInput.addEventListener("input", () => {
     const filter = searchInput.value.toLowerCase();
-    const table = document.getElementById("race-table");
-    if (!table) return;
-    const rows = table.querySelectorAll("tbody tr");
 
-    rows.forEach(row => {
-      let rowMatch = false;
-      row.querySelectorAll("td").forEach(cell => {
-        cell.innerHTML = cell.textContent;
-        if (filter && cell.textContent.toLowerCase().includes(filter)) {
-          const regex = new RegExp(`(${filter})`, "gi");
-          cell.innerHTML = cell.textContent.replace(regex, `<span class="highlight">$1</span>`);
-          rowMatch = true;
-        }
-      });
-      row.style.display = rowMatch || !filter ? "" : "none";
-    });
+    filteredRows = allRows.filter(row =>
+      row.some(cell => cell && cell.toString().toLowerCase().includes(filter))
+    );
+
+    currentPage = 1;
+    renderTablePage(filteredRows, currentPage);
   });
 
   clearSearch.addEventListener("click", () => {
     searchInput.value = "";
-    searchInput.dispatchEvent(new Event("input"));
+    filteredRows = [...allRows];
+    renderTablePage(filteredRows, 1);
   });
+}
+
+// =============================
+// ===== Derby Submenu (OB/YB) =====
+// =============================
+function setupDerbyMenu() {
+  const menu = document.getElementById("derby-menu");
+  if (!menu) return;
+
+  menu.innerHTML = `
+    <button id="btnOB" class="active">Old Bird</button>
+    <button id="btnYB">Young Bird</button>
+  `;
+
+  const btnOB = document.getElementById("btnOB");
+  const btnYB = document.getElementById("btnYB");
+
+  btnOB.onclick = () => {
+    btnOB.classList.add("active");
+    btnYB.classList.remove("active");
+    currentSheet = "OB";
+    loadSheet(currentSheet);
+  };
+
+  btnYB.onclick = () => {
+    btnYB.classList.add("active");
+    btnOB.classList.remove("active");
+    currentSheet = "YB";
+    loadSheet(currentSheet);
+  };
 }
 
 // =============================
 // ===== Responsive Search Box ====
 // =============================
 function moveSearch() {
-  const raceDetails = document.getElementById('race-details-wrapper');
   const raceTable = document.getElementById('race-table-wrapper');
 
-  // Mobile layout
   if (window.innerWidth <= 768) {
-    if (search.parentNode !== raceSection || search.nextSibling !== raceTable) {
-      raceSection.insertBefore(search, raceTable);
-    }
-  } 
-  // Desktop layout
-  else {
-    if (search.parentNode !== raceDetails.parentNode || search.previousSibling !== raceDetails) {
-      raceDetails.parentNode.insertBefore(search, raceDetails.nextSibling);
-    }
+    raceSection.insertBefore(search, raceTable);
+  } else {
+    raceSection.insertBefore(search, raceTable);
   }
 }
-
 
 // =============================
 // ===== Initialization =====
 // =============================
 document.addEventListener("DOMContentLoaded", () => {
-  loadSheet(derbySheet);
+  setupDerbyMenu();
+  loadSheet(currentSheet);
   setupSearch();
   moveSearch();
 });
 
 window.addEventListener('resize', moveSearch);
 window.addEventListener('load', moveSearch);
-
