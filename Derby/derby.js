@@ -86,7 +86,7 @@ function buildRaceTable(values, table) {
   table.prepend(theadEl);
 
   allRows = values.slice(headerIndex + 1)
-                  .map(r => r.slice(0,12))
+                  .map(r => r.slice(0,14))
                   .filter(r => r.some(c => c && c.toString().trim() !== ""));
   filteredRows = [...allRows];
 
