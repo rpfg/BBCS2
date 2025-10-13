@@ -20,12 +20,12 @@ const paginationWrapper = document.getElementById("pagination-wrapper") || null;
 
 // ---------------- Funrace 1 Bracket Mapping ----------------
 const funrace1Mapping = {
-  "Central": { sheet: "FUNRACE1", columns: 11 },
-  "Bracket 1": { sheet: "FR1BRACKET", columns: 11, rows: [2, 12] },
-  "Bracket 2": { sheet: "FR1BRACKET", columns: 11, rows: [16, 26] },
-  "Bracket 3": { sheet: "FR1BRACKET", columns: 11, rows: [30, 40] },
-  "Bracket 4": { sheet: "FR1BRACKET", columns: 11, rows: [44, 54] },
-  "Bracket 5": { sheet: "FR1BRACKET", columns: 11, rows: [58, 68] }
+  "Central": { sheet: "FUNRACE1" },
+  "Bracket 1": { sheet: "FR1BRACKET", startCol: 1, endCol: 11 },   // A–K
+  "Bracket 2": { sheet: "FR1BRACKET", startCol: 13, endCol: 23 },  // M–W
+  "Bracket 3": { sheet: "FR1BRACKET", startCol: 25, endCol: 35 },  // Y–AI
+  "Bracket 4": { sheet: "FR1BRACKET", startCol: 37, endCol: 47 },  // AK–AU
+  "Bracket 5": { sheet: "FR1BRACKET", startCol: 49, endCol: 59 }   // AW–BG
 };
 
 // =============================
@@ -56,14 +56,10 @@ function setActiveRace(raceId) {
 // =============================
 // ===== Data Load Functions ====
 // =============================
-// IMPORTANT: funrace1Data will store the raw "values" array (NOT the full response object)
-let funrace1Data = null; // will be Array or null
+let funrace1Data = null; // raw values array
 
 async function loadSheet(sheetName) {
-  if (!raceTable) {
-    console.error("race-table element not found in DOM.");
-    return;
-  }
+  if (!raceTable) return;
   const tbody = raceTable.querySelector("tbody");
   const thead = raceTable.querySelector("thead");
   const lapWrapper = document.getElementById("lap-winners-wrapper");
@@ -76,31 +72,22 @@ async function loadSheet(sheetName) {
     let values;
 
     if (sheetName === "FUNRACE1") {
-      // use cached values array if present
       if (!funrace1Data) {
         const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/FUNRACE1?key=${API_KEY}`);
         const data = await res.json();
-        if (!data || !data.values) {
-          throw new Error("FUNRACE1 returned no values");
-        }
-        funrace1Data = data.values; // normalize to values array
+        if (!data || !data.values) throw new Error("FUNRACE1 returned no values");
+        funrace1Data = data.values;
       }
       values = funrace1Data;
 
-      // rebuild submenu for FR1 brackets (if slot exists)
       generateFunrace1Submenu();
-
-      // build lap winners and render central bracket
       buildLapWinnersTable(values);
       renderBracket("Central");
-
     } else {
-      // FUNRACE2 (or others)
       const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheetName}?key=${API_KEY}`);
       const data = await res.json();
       if (!data || !data.values) {
         if (tbody) tbody.innerHTML = "<tr><td colspan='12'>No data found</td></tr>";
-        console.warn(`${sheetName} returned no values`);
         setActiveRace(sheetName);
         return;
       }
@@ -112,20 +99,16 @@ async function loadSheet(sheetName) {
 
     setActiveRace(sheetName);
   } catch (err) {
-    if (raceTable && raceTable.querySelector("tbody")) {
+    if (raceTable?.querySelector("tbody")) {
       raceTable.querySelector("tbody").innerHTML = "<tr><td colspan='12'>Error loading data</td></tr>";
     }
     console.error("Error loading sheet", sheetName, err);
   }
 }
 
-// Render brackets from cached FUNRACE1 (funrace1Data is values array)
+// Render brackets from cached FUNRACE1
 function renderBracket(name) {
-  if (!Array.isArray(funrace1Data)) {
-    console.warn("No cached FUNRACE1 data to render bracket:", name);
-    return;
-  }
-
+  if (!Array.isArray(funrace1Data)) return;
   const info = funrace1Mapping[name];
   if (!info) return;
 
@@ -135,26 +118,36 @@ function renderBracket(name) {
   if (tbody) tbody.innerHTML = "";
   if (thead) thead.innerHTML = "";
 
-  let rows = funrace1Data.slice(); // copy
-  if (info.rows) rows = rows.slice(info.rows[0] - 1, info.rows[1]);
-  rows = rows.map(r => (Array.isArray(r) ? r.slice(0, info.columns) : []));
+  let rows = funrace1Data.slice();
+  if (info.startCol && info.endCol) {
+    const headerRowFull = rows[0] || [];
+    const headerRow = headerRowFull.slice(info.startCol - 1, info.endCol);
+    const trHead = document.createElement("tr");
+    headerRow.forEach(h => {
+      const th = document.createElement("th");
+      th.innerText = h || "";
+      trHead.appendChild(th);
+    });
+    if (thead) thead.appendChild(trHead);
 
-  if (rows.length === 0) return;
+    rows = rows.slice(1).map(r => r.slice(info.startCol - 1, info.endCol))
+               .filter(r => r.some(cell => cell && cell.toString().trim() !== ""));
+  } else {
+    // fallback for Central
+    const headerRow = rows[0];
+    const trHead = document.createElement("tr");
+    headerRow.forEach(h => {
+      const th = document.createElement("th");
+      th.innerText = h || "";
+      trHead.appendChild(th);
+    });
+    if (thead) thead.appendChild(trHead);
+    rows = rows.slice(1);
+  }
 
-  // header
-  const headerRow = rows[0];
-  const trHead = document.createElement("tr");
-  headerRow.forEach(h => {
-    const th = document.createElement("th");
-    th.innerText = h || "";
-    trHead.appendChild(th);
-  });
-  if (thead) thead.appendChild(trHead);
-
-  allRows = rows.slice(1);
+  allRows = rows;
   currentPage = 1;
   renderTablePage(allRows, currentPage);
-
   setActiveBracket(name);
 }
 
@@ -164,9 +157,8 @@ function buildLapWinnersTable(values) {
   if (!wrapper || !Array.isArray(values)) return;
 
   const tableData = values.map(row => {
-    // ensure row is array
     const r = Array.isArray(row) ? row : [];
-    return [ r[17] || "", r[18] || "", r[19] || "", r[20] || "" ];
+    return [r[17] || "", r[18] || "", r[19] || "", r[20] || ""];
   }).filter(r => r.some(c => c));
 
   if (!tableData.length) {
@@ -176,11 +168,11 @@ function buildLapWinnersTable(values) {
 
   let html = `<table class="lap-winners"><thead><tr><th colspan="4">${tableData[0][0] || "Lap Winners"}</th></tr></thead><tbody>`;
   for (let i = 1; i < tableData.length; i++) {
-    html += `<tr>`;
+    html += "<tr>";
     tableData[i].forEach(cell => html += `<td>${cell}</td>`);
-    html += `</tr>`;
+    html += "</tr>";
   }
-  html += `</tbody></table>`;
+  html += "</tbody></table>";
   wrapper.innerHTML = html;
 }
 
@@ -199,14 +191,13 @@ function buildRaceTable(values, table) {
     trHead.appendChild(th);
   });
   theadEl.appendChild(trHead);
-  // remove existing thead if present then prepend
   const existingThead = table.querySelector("thead");
   if (existingThead) existingThead.remove();
   table.prepend(theadEl);
 
   allRows = values.slice(headerIndex + 1)
-                  .filter(r => Array.isArray(r) && r.slice(0, 12).some(c => c))
-                  .map(r => r.slice(0, 12));
+    .filter(r => Array.isArray(r) && r.slice(0, 12).some(c => c))
+    .map(r => r.slice(0, 12));
   currentPage = 1;
   renderTablePage(allRows, currentPage);
 }
@@ -246,7 +237,10 @@ function setupPagination(rows, activePage) {
   const prevBtn = document.createElement("button");
   prevBtn.innerText = "<";
   prevBtn.disabled = activePage === 1;
-  prevBtn.onclick = () => { currentPage = Math.max(1, currentPage - 1); renderTablePage(allRows, currentPage); };
+  prevBtn.onclick = () => {
+    currentPage = Math.max(1, currentPage - 1);
+    renderTablePage(allRows, currentPage);
+  };
   paginationWrapper.appendChild(prevBtn);
 
   const pages = [];
@@ -264,7 +258,10 @@ function setupPagination(rows, activePage) {
     const btn = document.createElement("button");
     btn.innerText = p;
     if (p === activePage) btn.classList.add("active");
-    if (p !== "...") btn.onclick = () => { currentPage = p; renderTablePage(allRows, currentPage); };
+    if (p !== "...") btn.onclick = () => {
+      currentPage = p;
+      renderTablePage(allRows, currentPage);
+    };
     else {
       btn.disabled = true;
       btn.style.cursor = "default";
@@ -278,7 +275,10 @@ function setupPagination(rows, activePage) {
   const nextBtn = document.createElement("button");
   nextBtn.innerText = ">";
   nextBtn.disabled = activePage === totalPages;
-  nextBtn.onclick = () => { currentPage = Math.min(totalPages, currentPage + 1); renderTablePage(allRows, currentPage); };
+  nextBtn.onclick = () => {
+    currentPage = Math.min(totalPages, currentPage + 1);
+    renderTablePage(allRows, currentPage);
+  };
   paginationWrapper.appendChild(nextBtn);
 }
 
@@ -292,18 +292,12 @@ function setupSearch() {
 
   searchInput.addEventListener("input", () => {
     const filter = searchInput.value.toLowerCase();
-
-    // Filter allRows, not just visible page
-    const filteredRows = allRows.filter(row => {
-      return Array.isArray(row) && row.some(cell =>
+    const filteredRows = allRows.filter(row =>
+      Array.isArray(row) && row.some(cell =>
         (cell || "").toString().toLowerCase().includes(filter)
-      );
-    });
-
-    // Render filtered set (or all if filter is empty)
+      )
+    );
     renderTablePage(filter ? filteredRows : allRows, 1);
-
-    // Highlight text in visible table
     highlightSearch(filter);
   });
 
@@ -322,7 +316,6 @@ function highlightSearch(filter) {
   if (!filter || !raceTable) return;
   const rows = raceTable.querySelectorAll("tbody tr");
   const regex = new RegExp(`(${escapeRegExp(filter)})`, "gi");
-
   rows.forEach(row => {
     row.querySelectorAll("td").forEach(cell => {
       const text = cell.textContent;
@@ -330,7 +323,9 @@ function highlightSearch(filter) {
     });
   });
 }
-
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 // =============================
 // ===== Responsive Search Box ====
@@ -339,8 +334,6 @@ function moveSearch() {
   if (!search || !raceSection) return;
   const raceTableWrapper = document.getElementById('race-table-wrapper') || null;
   if (!raceTableWrapper) return;
-
-  // current behavior: always insert before raceTableWrapper in raceSection
   raceSection.insertBefore(search, raceTableWrapper);
 }
 
@@ -353,7 +346,6 @@ function generateFunrace1Submenu() {
   const submenu = container.querySelector("ul");
   if (!submenu) return;
   submenu.innerHTML = "";
-
   Object.keys(funrace1Mapping).forEach(name => {
     const li = document.createElement("li");
     li.innerText = name;
@@ -365,15 +357,14 @@ function generateFunrace1Submenu() {
 async function filterBracket(name) {
   const info = funrace1Mapping[name];
   if (!info) return;
-
   if (!raceTable) return;
+
   const tbody = raceTable.querySelector("tbody");
   const thead = raceTable.querySelector("thead");
   if (tbody) tbody.innerHTML = "";
   if (thead) thead.innerHTML = "";
 
   try {
-    // prefer to reuse cached funrace1Data if the source is FUNRACE1
     let dataValues;
     if (info.sheet === "FUNRACE1" && Array.isArray(funrace1Data)) {
       dataValues = funrace1Data;
@@ -387,11 +378,9 @@ async function filterBracket(name) {
       dataValues = data.values;
     }
 
-    let rows = dataValues;
-    if (info.rows) rows = rows.slice(info.rows[0] - 1, info.rows[1]);
-    rows = rows.map(r => (Array.isArray(r) ? r.slice(0, info.columns) : []));
-
-    const headerRow = rows[0] || [];
+    // --- Header and Rows (Row 2 = header, Row 3+ = data) ---
+    const headerRowFull = dataValues[1] || [];
+    const headerRow = headerRowFull.slice((info.startCol || 1) - 1, info.endCol || headerRowFull.length);
     const trHead = document.createElement("tr");
     headerRow.forEach(h => {
       const th = document.createElement("th");
@@ -400,15 +389,22 @@ async function filterBracket(name) {
     });
     if (thead) thead.appendChild(trHead);
 
-    allRows = rows.slice(1);
+    // Data rows start at row 3
+    let rows = dataValues.slice(2).map(r => {
+      const start = (info.startCol || 1) - 1;
+      const end = info.endCol || r.length;
+      return Array.isArray(r) ? r.slice(start, end) : [];
+    }).filter(r => r.some(cell => cell && cell.toString().trim() !== ""));
+
+    allRows = rows;
     currentPage = 1;
     renderTablePage(allRows, currentPage);
-
     setActiveBracket(name);
   } catch (err) {
     console.error("Error filtering bracket", name, err);
   }
 }
+
 
 function setActiveBracket(name) {
   const container = document.getElementById("funrace1-submenu");
@@ -432,5 +428,5 @@ document.addEventListener("DOMContentLoaded", () => {
   moveSearch();
 });
 
-window.addEventListener('resize', moveSearch);
-window.addEventListener('load', moveSearch);
+window.addEventListener("resize", moveSearch);
+window.addEventListener("load", moveSearch);
