@@ -94,7 +94,15 @@ function buildRaceTable(values, table) {
   const headerIndex = values.findIndex(row => row[0] === "Rank");
   if (headerIndex === -1) return;
 
-  const headerRow = values[headerIndex].slice(0,12);
+  // 🔧 Set column range per sheet
+  let colEnd;
+  if (currentSheet === "OB") colEnd = 14;         // A–N (14 columns)
+  else if (currentSheet === "YB") colEnd = 13;    // A–M (13 columns)
+  else if (currentSheet === "YBCAVITE" || currentSheet === "YBLAGUNA") colEnd = 12; // A–L (12 columns)
+  else colEnd = 12; // default fallback
+
+  // 🧱 Build header
+  const headerRow = values[headerIndex].slice(0, colEnd);
   const theadEl = document.createElement("thead");
   const trHead = document.createElement("tr");
   headerRow.forEach(h => {
@@ -105,14 +113,16 @@ function buildRaceTable(values, table) {
   theadEl.appendChild(trHead);
   table.prepend(theadEl);
 
+  // 📊 Build data rows
   allRows = values.slice(headerIndex + 1)
-                  .map(r => r.slice(0,12))
+                  .map(r => r.slice(0, colEnd))
                   .filter(r => r.some(c => c && c.toString().trim() !== ""));
   filteredRows = [...allRows];
 
   currentPage = 1;
   renderTablePage(filteredRows, currentPage);
 }
+
 
 // =============================
 // ===== Table Rendering & Pagination ====
@@ -126,18 +136,26 @@ function renderTablePage(rows, page) {
   const end = Math.min(start + rowsPerPage, rows.length);
   const pageRows = rows.slice(start, end);
 
+  // Get number of header columns so every row matches
+  const expectedCols = table.querySelectorAll("thead th").length;
+
   pageRows.forEach(row => {
     const tr = document.createElement("tr");
-    row.forEach(cell => {
+
+    // Always create the same number of cells
+    for (let i = 0; i < expectedCols; i++) {
       const td = document.createElement("td");
-      td.innerText = cell || "";
+      const cellValue = row[i] || ""; // if blank or missing
+      td.innerText = cellValue;
       tr.appendChild(td);
-    });
+    }
+
     tbody.appendChild(tr);
   });
 
   setupPagination(rows, page);
 }
+
 
 function setupPagination(rows, activePage) {
   const wrapper = document.getElementById("pagination-wrapper");
