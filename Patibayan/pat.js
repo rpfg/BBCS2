@@ -5,7 +5,7 @@
 // ---------- Constants & Globals ----------
 const SHEET_ID = "1_dOyGKf8mrPJJlqGWWRU8B_TObvE5o-wuf3OqErAz4o";
 const API_KEY = "AIzaSyBGKe-HWRSjETakWez_QDuxWFCmeulQgEk";
-const patibayanSheets = ["PATIBAYAN1","PATIBAYAN2"];
+const patibayanSheets = ["PATIBAYAN1", "PATIBAYAN2"];
 
 let allRows = [];
 let currentPage = 1;
@@ -13,6 +13,7 @@ const rowsPerPage = 50;
 
 // DOM Elements
 const search = document.querySelector('.search-container');
+const patibayanSection = document.getElementById("patibayan-section"); // ✅ Add this if your HTML wraps the section
 
 // =============================
 // ===== Submenu Functions =====
@@ -67,7 +68,7 @@ function buildPatibayanTable(values) {
   const tbody = table.querySelector("tbody");
 
   // Use first row as header
-  const headerRow = values[0].slice(0,3);
+  const headerRow = values[0].slice(0, 3);
   const trHead = document.createElement("tr");
   headerRow.forEach(h => {
     const th = document.createElement("th");
@@ -76,7 +77,7 @@ function buildPatibayanTable(values) {
   });
   thead.appendChild(trHead);
 
-  allRows = values.slice(1).map(r => r.slice(0,3));
+  allRows = values.slice(1).map(r => r.slice(0, 3));
   currentPage = 1;
   renderTablePage(allRows, currentPage);
 }
@@ -163,9 +164,39 @@ function setupSearch() {
 }
 
 // =============================
+// ===== Responsive Search Box (Improved) ====
+// =============================
+function moveSearch() {
+  const raceTableWrapper = document.getElementById('patibayan-table-wrapper');
+  if (!search || !patibayanSection || !raceTableWrapper) return;
+
+  // ✅ Only move if not already placed correctly
+  const currentParent = search.parentElement;
+  if (currentParent !== patibayanSection) {
+    patibayanSection.insertBefore(search, raceTableWrapper);
+  }
+}
+
+// =============================
 // ===== Initialization =====
+// =============================
 document.addEventListener("DOMContentLoaded", () => {
   generateSubmenu();
   loadSheet("PATIBAYAN1");
   setupSearch();
+  moveSearch();
 });
+
+// ✅ Debounced resize handler (prevents search box closing on mobile)
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    // 🧠 Skip moveSearch if resize caused by soft keyboard
+    const heightDiff = Math.abs(window.innerHeight - document.documentElement.clientHeight);
+    if (heightDiff < 100) moveSearch();
+  }, 250);
+});
+
+// One-time move on full load
+window.addEventListener('load', moveSearch);
