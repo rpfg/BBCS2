@@ -293,13 +293,22 @@ function setupDerbyMenu() {
 // =============================
 function moveSearch() {
   const raceTable = document.getElementById('race-table-wrapper');
+  const currentParent = search.parentElement;
 
+  // Determine target position depending on viewport width
   if (window.innerWidth <= 768) {
-    raceSection.insertBefore(search, raceTable);
+    // On mobile: place search above the race table
+    if (currentParent !== raceSection) {
+      raceSection.insertBefore(search, raceTable);
+    }
   } else {
-    raceSection.insertBefore(search, raceTable);
+    // On desktop: keep it above the table as well (or wherever you prefer)
+    if (currentParent !== raceSection) {
+      raceSection.insertBefore(search, raceTable);
+    }
   }
 }
+
 
 // =============================
 // ===== Initialization =====
@@ -311,8 +320,17 @@ document.addEventListener("DOMContentLoaded", () => {
   moveSearch();
 });
 
-window.addEventListener('resize', moveSearch);
-window.addEventListener('load', moveSearch);
+// ✅ Use resize debounce to prevent "closing" behavior on mobile
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    // Only reposition if layout actually changed (avoid move on keyboard open)
+    const heightDiff = Math.abs(window.innerHeight - document.documentElement.clientHeight);
+    if (heightDiff < 100) moveSearch(); // Skip if keyboard caused resize
+  }, 250);
+});
+
 
 // =============================
 // ===== Load Sheet with Column Range (for Cavite/Laguna) =====
