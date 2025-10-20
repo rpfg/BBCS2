@@ -50,16 +50,35 @@ async function loadSheet(sheetName) {
 // ----------------- Lap Winners Table -----------------
 function buildLapWinnersTable(values) {
   const wrapper = document.getElementById("lap-winners-wrapper");
-  
-  const tableData = values.map(row => [row[18]||"", row[19]||"", row[20]||"", row[21]||""])
-                          .filter(r => r.some(c => c));
-  
-  if (!tableData.length) { 
-    wrapper.innerHTML = ""; 
-    return; 
+
+  // 🧠 Determine column range based on active sheet
+  let lapCols;
+  if (currentSheet === "OB" || currentSheet === "YB") {
+    // OB and YB lap winners are in columns S–W
+    lapCols = [18, 19, 20, 21, 22];
+  } else if (currentSheet === "YBCAVITE" || currentSheet === "YBLAGUNA") {
+    // Cavite and Laguna have no lap winners
+    lapCols = [];
+  } else {
+    // Default fallback
+    lapCols = [18, 19, 20, 21, 22];
   }
 
-  let html = `<table class="lap-winners"><thead><tr><th colspan="4">${tableData[0][0] || "Lap Winners"}</th></tr></thead><tbody>`;
+  if (!lapCols.length) {
+    wrapper.innerHTML = "";
+    return;
+  }
+
+  const tableData = values
+    .map(row => lapCols.map(i => row[i] || ""))
+    .filter(r => r.some(c => c));
+
+  if (!tableData.length) {
+    wrapper.innerHTML = "";
+    return;
+  }
+
+  let html = `<table class="lap-winners"><thead><tr><th colspan="${lapCols.length}">${tableData[0][0] || "Lap Winners"}</th></tr></thead><tbody>`;
   for (let i = 1; i < tableData.length; i++) {
     html += `<tr>`;
     tableData[i].forEach(cell => html += `<td>${cell}</td>`);
@@ -68,6 +87,7 @@ function buildLapWinnersTable(values) {
   html += `</tbody></table>`;
   wrapper.innerHTML = html;
 }
+
 
 // ----------------- Race Results Table -----------------
 function buildRaceTable(values, table) {
