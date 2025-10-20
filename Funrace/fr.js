@@ -19,7 +19,6 @@ const raceTable = document.getElementById("race-table") || null;
 const paginationWrapper = document.getElementById("pagination-wrapper") || null;
 
 // ---------------- Funrace 1 Bracket Mapping ----------------
-// ---------------- Funrace 1 Bracket Mapping ----------------
 const funrace1Mapping = {
   "Central": { sheet: "FUNRACE1", startCol: 1, endCol: 11 },   // A–K
   "Bracket 1": { sheet: "FR1BRACKET", startCol: 1, endCol: 11 },   // A–K
@@ -28,6 +27,7 @@ const funrace1Mapping = {
   "Bracket 4": { sheet: "FR1BRACKET", startCol: 37, endCol: 47 },  // AK–AU
   "Bracket 5": { sheet: "FR1BRACKET", startCol: 49, endCol: 59 }   // AW–BG
 };
+
 
 // =============================
 // ===== Submenu Functions =====
@@ -329,13 +329,18 @@ function escapeRegExp(str) {
 }
 
 // =============================
-// ===== Responsive Search Box ====
+// ===== Responsive Search Box (Improved) ====
 // =============================
 function moveSearch() {
   if (!search || !raceSection) return;
-  const raceTableWrapper = document.getElementById('race-table-wrapper') || null;
+  const raceTableWrapper = document.getElementById('race-table-wrapper');
   if (!raceTableWrapper) return;
-  raceSection.insertBefore(search, raceTableWrapper);
+
+  // ✅ Only move if not already placed correctly
+  const currentParent = search.parentElement;
+  if (currentParent !== raceSection) {
+    raceSection.insertBefore(search, raceTableWrapper);
+  }
 }
 
 // =============================
@@ -422,6 +427,7 @@ function clearFunrace1Submenu() {
 
 // =============================
 // ===== Initialization =====
+// =============================
 document.addEventListener("DOMContentLoaded", () => {
   generateSubmenu();
   loadSheet("FUNRACE1");
@@ -429,5 +435,16 @@ document.addEventListener("DOMContentLoaded", () => {
   moveSearch();
 });
 
-window.addEventListener("resize", moveSearch);
-window.addEventListener("load", moveSearch);
+// ✅ Debounced resize handler (prevents mobile keyboard issues)
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    // 🧠 Skip moveSearch if resize caused by soft keyboard
+    const heightDiff = Math.abs(window.innerHeight - document.documentElement.clientHeight);
+    if (heightDiff < 100) moveSearch();
+  }, 250);
+});
+
+// Keep onload just for redundancy (once)
+window.addEventListener('load', moveSearch);
