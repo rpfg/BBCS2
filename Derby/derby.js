@@ -201,7 +201,7 @@ function setupSearch() {
 }
 
 // =============================
-// ===== Derby Submenu (OB/YB) =====
+// ===== Derby Submenu (OB/YB/Cavite/Laguna) =====
 // =============================
 function setupDerbyMenu() {
   const menu = document.getElementById("derby-menu");
@@ -210,25 +210,45 @@ function setupDerbyMenu() {
   menu.innerHTML = `
     <button id="btnOB" class="active">Old Bird</button>
     <button id="btnYB">Young Bird</button>
+    <button id="btnYBCavite">Cavite ONLY</button>
+    <button id="btnYBLaguna">Laguna ONLY</button>
   `;
 
   const btnOB = document.getElementById("btnOB");
   const btnYB = document.getElementById("btnYB");
+  const btnYBCavite = document.getElementById("btnYBCavite");
+  const btnYBLaguna = document.getElementById("btnYBLaguna");
+
+  function setActive(button) {
+    document.querySelectorAll("#derby-menu button").forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+  }
 
   btnOB.onclick = () => {
-    btnOB.classList.add("active");
-    btnYB.classList.remove("active");
+    setActive(btnOB);
     currentSheet = "OB";
     loadSheet(currentSheet);
   };
 
   btnYB.onclick = () => {
-    btnYB.classList.add("active");
-    btnOB.classList.remove("active");
+    setActive(btnYB);
     currentSheet = "YB";
     loadSheet(currentSheet);
   };
+
+  btnYBCavite.onclick = () => {
+    setActive(btnYBCavite);
+    currentSheet = "YBCAVITE";
+    loadSheetWithRange(currentSheet, "A:L"); // limit to A–L
+  };
+
+  btnYBLaguna.onclick = () => {
+    setActive(btnYBLaguna);
+    currentSheet = "YBLAGUNA";
+    loadSheetWithRange(currentSheet, "A:L"); // limit to A–L
+  };
 }
+
 
 // =============================
 // ===== Responsive Search Box ====
@@ -255,3 +275,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener('resize', moveSearch);
 window.addEventListener('load', moveSearch);
+
+// =============================
+// ===== Load Sheet with Column Range (for Cavite/Laguna) =====
+// =============================
+async function loadSheetWithRange(sheetName, colRange) {
+  const table = document.getElementById("race-table");
+  const tbody = table.querySelector("tbody");
+  const thead = table.querySelector("thead");
+  const lapWrapper = document.getElementById("lap-winners-wrapper");
+
+  tbody.innerHTML = "";
+  lapWrapper.innerHTML = "";
+  thead.innerHTML = "";
+
+  try {
+    const range = `${sheetName}!${colRange}`;
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`);
+    const data = await res.json();
+    if (!data.values) { 
+      tbody.innerHTML = "<tr><td colspan='12'>No data found</td></tr>"; 
+      return; 
+    }
+
+    buildLapWinnersTable(data.values);
+    buildRaceTable(data.values, table);
+
+  } catch(err) {
+    tbody.innerHTML = "<tr><td colspan='12'>Error loading data</td></tr>";
+    console.error(err);
+  }
+}
