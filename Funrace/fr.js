@@ -19,8 +19,9 @@ const raceTable = document.getElementById("race-table") || null;
 const paginationWrapper = document.getElementById("pagination-wrapper") || null;
 
 // ---------------- Funrace 1 Bracket Mapping ----------------
+// ---------------- Funrace 1 Bracket Mapping ----------------
 const funrace1Mapping = {
-  "Central": { sheet: "FUNRACE1" },
+  "Central": { sheet: "FUNRACE1", startCol: 1, endCol: 11 },   // A–K
   "Bracket 1": { sheet: "FR1BRACKET", startCol: 1, endCol: 11 },   // A–K
   "Bracket 2": { sheet: "FR1BRACKET", startCol: 13, endCol: 23 },  // M–W
   "Bracket 3": { sheet: "FR1BRACKET", startCol: 25, endCol: 35 },  // Y–AI
