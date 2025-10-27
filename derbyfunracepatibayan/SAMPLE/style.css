@@ -1,0 +1,54 @@
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff; /* fixed color */
+    padding: 15px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo {
+    margin-right: 50px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.list {
+    list-style: none;
+    display: flex; 
+    gap: 25px;
+}
+
+#toggler,
+.navbar label {
+    display: none;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 600px) {
+    .menu {
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .list {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .navbar label {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 24px; /* hamburger icon size */
+    }
+    #toggler:checked ~ .menu {
+        max-height: 500px; /* large enough to show full menu */
+    }
+}

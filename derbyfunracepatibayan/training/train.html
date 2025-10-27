@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== Remix Icons ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <title>BBC Training - Brackets</title>
+
+  <!-- ===== Stylesheets ===== -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="/training/train.css">
+
+  <!-- ===== Scripts ===== -->
+  <script src="../script.js" defer></script>
+  <script src="/training/train.js" defer></script>
+</head>
+<body>
+  <main>
+    <!-- ===== Submenu (Dynamic Races) ===== -->
+    <div class="submenu" id="training-submenu">
+      <ul>
+        <!-- Submenu items dynamically inserted -->
+      </ul>
+    </div>
+
+    <!-- Race Section -->
+    <section class="race-section">
+      <!-- ===== Race Details Table (unchanged) ===== -->
+      <div id="race-details-wrapper">
+        <!-- Race Details Table dynamically inserted -->
+      </div>
+
+      <!-- ===== Bracket Submenu ===== -->
+<div class="submenu" id="bracket-submenu">
+  <ul>
+    <li data-bracket="1" class="active">Bracket 1</li>
+    <li data-bracket="2">Bracket 2</li>
+    <li data-bracket="3">Bracket 3</li>
+    <li data-bracket="4">Bracket 4</li>
+    <li data-bracket="5">Bracket 5</li>
+  </ul>
+</div>
+
+
+      <!-- ===== Bracket Tables ===== -->
+      <div id="bracket-tables-wrapper">
+        <table id="bracket-1" class="bracket-table"></table>
+        <table id="bracket-2" class="bracket-table" style="display:none;"></table>
+        <table id="bracket-3" class="bracket-table" style="display:none;"></table>
+        <table id="bracket-4" class="bracket-table" style="display:none;"></table>
+        <table id="bracket-5" class="bracket-table" style="display:none;"></table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

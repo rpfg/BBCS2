@@ -1,0 +1,148 @@
+/* ============================= */
+/* ===== Main Layout ===== */
+/* ============================= */
+main {
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* ============================= */
+/* ===== Table Styling ===== */
+/* ============================= */
+#race-table {
+  width: max-content;
+  max-width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-size: 14px;
+}
+
+#race-table th,
+#race-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#race-table th {
+  background-color: #00509d;
+  color: #fff;
+}
+
+#race-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#race-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* ============================= */
+/* ===== Search Bar ===== */
+/* ============================= */
+.search-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.search-container input {
+  width: 100%;
+  height: 32px;
+  padding: 4px 30px 4px 8px;
+  font-size: 14px;
+  border: 1px solid #00509d;
+  border-radius: 5px;
+}
+
+.search-container .clear-search {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #00509d;
+  font-size: 16px;
+}
+
+/* ============================= */
+/* ===== Pagination ===== */
+/* ============================= */
+.pagination-wrapper {
+  margin-top: 15px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination-wrapper button {
+  padding: 4px 8px;
+  border: 1px solid #00509d;
+  background-color: #fff;
+  color: #00509d;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pagination-wrapper button.active {
+  background-color: #3835f7;
+  color: #fff;
+}
+
+.pagination-wrapper button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* ===== Submenu Buttons ===== */
+/* ============================= */
+.derby-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px auto 15px auto;
+}
+
+.derby-menu button {
+  background: #f2f2f2;
+  border: 1px solid #00509d;
+  padding: 8px 18px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #00509d;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.derby-menu button:hover {
+  background: #e0e0e0;
+}
+
+.derby-menu button.active {
+  background: #00509d;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ============================= */
+/* ===== Responsive ===== */
+/* ============================= */
+@media screen and (max-width: 768px) {
+  .derby-menu {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .derby-menu button {
+    flex: 1 1 45%;
+    padding: 8px;
+  }
+}

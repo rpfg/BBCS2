@@ -1,0 +1,193 @@
+// =============================
+// ===== Other Races Script =====
+// =============================
+
+const SHEET_ID = "1_dOyGKf8mrPJJlqGWWRU8B_TObvE5o-wuf3OqErAz4o";
+const API_KEY = "AIzaSyBGKe-HWRSjETakWez_QDuxWFCmeulQgEk";
+
+let currentSheet = "2K"; // default sheet
+let allRows = [];
+let filteredRows = [];
+let currentPage = 1;
+const rowsPerPage = 50;
+
+// =============================
+// ===== Load Sheet =====
+// =============================
+async function loadSheetWithRange(sheetName, colRange) {
+  const table = document.getElementById("race-table");
+  const tbody = table.querySelector("tbody");
+  const thead = table.querySelector("thead");
+
+  tbody.innerHTML = "";
+  thead.innerHTML = "";
+
+  try {
+    const range = `${sheetName}!${colRange}`;
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`);
+    const data = await res.json();
+
+    if (!data.values) {
+      tbody.innerHTML = "<tr><td colspan='12'>No data found</td></tr>";
+      return;
+    }
+
+    buildRaceTable(data.values, table);
+  } catch (err) {
+    console.error(err);
+    tbody.innerHTML = "<tr><td colspan='12'>Error loading data</td></tr>";
+  }
+}
+
+// =============================
+// ===== Build Table =====
+// =============================
+function buildRaceTable(values, table) {
+  const headerIndex = values.findIndex(row => row[0] === "Rank");
+  if (headerIndex === -1) return;
+
+  const colEnd = 12; // A–L
+  const headerRow = values[headerIndex].slice(0, colEnd);
+
+  const theadEl = document.createElement("thead");
+  const trHead = document.createElement("tr");
+  headerRow.forEach(h => {
+    const th = document.createElement("th");
+    th.innerText = h || "";
+    trHead.appendChild(th);
+  });
+  theadEl.appendChild(trHead);
+  table.prepend(theadEl);
+
+  allRows = values.slice(headerIndex + 1)
+    .map(r => r.slice(0, colEnd))
+    .filter(r => r.some(c => c && c.trim() !== ""));
+  filteredRows = [...allRows];
+  currentPage = 1;
+  renderTablePage(filteredRows, currentPage);
+}
+
+// =============================
+// ===== Pagination =====
+// =============================
+function renderTablePage(rows, page) {
+  const table = document.getElementById("race-table");
+  const tbody = table.querySelector("tbody");
+  tbody.innerHTML = "";
+
+  const start = (page - 1) * rowsPerPage;
+  const end = Math.min(start + rowsPerPage, rows.length);
+  const pageRows = rows.slice(start, end);
+
+  const expectedCols = table.querySelectorAll("thead th").length;
+
+  pageRows.forEach(row => {
+    const tr = document.createElement("tr");
+    for (let i = 0; i < expectedCols; i++) {
+      const td = document.createElement("td");
+      td.innerText = row[i] || "";
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+
+  setupPagination(rows, page);
+}
+
+function setupPagination(rows, activePage) {
+  const wrapper = document.getElementById("pagination-wrapper");
+  wrapper.innerHTML = "";
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
+  if (totalPages <= 1) return;
+
+  const prev = document.createElement("button");
+  prev.innerText = "<";
+  prev.disabled = activePage === 1;
+  prev.onclick = () => { currentPage--; renderTablePage(filteredRows, currentPage); };
+  wrapper.appendChild(prev);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    if (i === activePage) btn.classList.add("active");
+    btn.onclick = () => { currentPage = i; renderTablePage(filteredRows, currentPage); };
+    wrapper.appendChild(btn);
+  }
+
+  const next = document.createElement("button");
+  next.innerText = ">";
+  next.disabled = activePage === totalPages;
+  next.onclick = () => { currentPage++; renderTablePage(filteredRows, currentPage); };
+  wrapper.appendChild(next);
+}
+
+// =============================
+// ===== Search =====
+// =============================
+function setupSearch() {
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+
+  searchInput.addEventListener("input", () => {
+    const filter = searchInput.value.toLowerCase();
+    filteredRows = allRows.filter(row => row.some(cell => cell && cell.toLowerCase().includes(filter)));
+    currentPage = 1;
+    renderTablePage(filteredRows, currentPage);
+  });
+
+  clearSearch.addEventListener("click", () => {
+    searchInput.value = "";
+    filteredRows = [...allRows];
+    renderTablePage(filteredRows, 1);
+  });
+}
+
+// =============================
+// ===== Submenu (2K / OC / 5L) =====
+// =============================
+function setupOtherMenu() {
+  const menu = document.getElementById("derby-menu");
+  if (!menu) return;
+
+  menu.innerHTML = `
+    <button id="btn2K" class="active">2K</button>
+    <button id="btnOC">OC</button>
+    <button id="btn5L">5L</button>
+  `;
+
+  const btn2K = document.getElementById("btn2K");
+  const btnOC = document.getElementById("btnOC");
+  const btn5L = document.getElementById("btn5L");
+
+  function setActive(button) {
+    document.querySelectorAll("#derby-menu button").forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+  }
+
+  btn2K.onclick = () => {
+    setActive(btn2K);
+    currentSheet = "2K";
+    loadSheetWithRange(currentSheet, "A:L");
+  };
+
+  btnOC.onclick = () => {
+    setActive(btnOC);
+    currentSheet = "OC";
+    loadSheetWithRange(currentSheet, "A:L");
+  };
+
+  btn5L.onclick = () => {
+    setActive(btn5L);
+    currentSheet = "5L";
+    loadSheetWithRange(currentSheet, "A:L");
+  };
+}
+
+// =============================
+// ===== Init =====
+// =============================
+document.addEventListener("DOMContentLoaded", () => {
+  setupOtherMenu();
+  loadSheetWithRange(currentSheet, "A:L");
+  setupSearch();
+});

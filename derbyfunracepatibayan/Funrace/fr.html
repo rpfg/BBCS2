@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== Remix Icons ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <title>BBC Funrace</title>
+
+  <!-- ===== Universal Stylesheet ===== -->
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- ===== Page-specific Stylesheet ===== -->
+  <link rel="stylesheet" href="/Funrace/fr.css">
+
+  <!-- ===== Universal Script ===== -->
+  <script src="../script.js" defer></script>
+
+  <!-- ===== Page-specific Script ===== -->
+  <script src="/Funrace/fr.js" defer></script>
+</head>
+<body>
+  <main>
+    <!-- ===== Submenu ===== -->
+    <div class="submenu" id="funrace-submenu">
+      <ul>
+        <li id="FUNRACE1">Funrace 1</li>
+        <li id="FUNRACE2">Funrace 2</li>
+        <li id="FUNRACE3">Funrace 3</li>
+      </ul>
+    </div>
+
+    <!-- ===== Race Section ===== -->
+    <section class="race-section">
+      
+      <!-- ===== Top Row: Race Details + Search | Lap Winners ===== -->
+      <div class="top-row">
+        <!-- Container: Race Details + Search -->
+        <div class="race-info-container">
+          <div id="race-details-wrapper">
+            <!-- Race details table will be injected here -->
+          </div>
+
+          <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search results...">
+            <span id="clearSearch" class="clear-search">✕</span>
+          </div>
+        </div>
+
+        <!-- Lap Winners -->
+        <div id="lap-winners-wrapper">
+          <!-- Lap winners table will be injected here -->
+        </div>
+      </div>
+
+            <div id="funrace1-submenu" class="submenu">
+  <ul></ul>
+</div>
+
+      <!-- ===== Race Results Table ===== -->
+      <div id="race-table-wrapper">
+        <table id="race-table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+
+
+
+      <!-- ===== Pagination ===== -->
+      <div id="pagination-wrapper" class="pagination-wrapper"></div>
+    </section>
+  </main>
+</body>
+</html>
