@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbarHTML = `
     <nav class="navbar">
       <div class="logo-container">
-        <a href="/BBCS2/index.html" class="logo">
-          <img src="/BBCS2/images/BBCLOGO.png" alt="BBC Logo" class="logo-img">
+        <a href="/index.html" class="logo">
+          <img src="/images/BBCLOGO.png" alt="BBC Logo" class="logo-img">
         </a>
         <span class="logo-message">BBC Cavite Laguna NDR S2</span>
       </div>
@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <li><a href="/BBCS2/index.html">Home</a></li>
           <li><a href="/BBCS2/Funrace/fr.html">Funrace</a></li>
           <li><a href="/BBCS2/Derby/derby.html">Derby</a></li>
-          <li><a href="/BBCS2/Patibayan/pat.html">Patibayan</a></li>
+          <li><a href="/BBCS2/OtherRace/other.html">Other Races</a></li> <!-- ✅ New menu link -->
+          <li><a href="/BBCS2/Patibayan/pat.html">Patibayan</a></li>          
         </ul>
       </div>
     </nav>
@@ -50,6 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.style.top = navbarHeight + "px";
   }
 
-  window.setTimeout(setMenuTop, 50); // wait for logo/fonts to load
+  window.setTimeout(setMenuTop, 50);
   window.addEventListener("resize", setMenuTop);
 });
