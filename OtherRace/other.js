@@ -143,7 +143,7 @@ function setupSearch() {
 }
 
 // =============================
-// ===== Submenu (2K / OC / 5L) =====
+// ===== Submenu (2K / OC / 5L / KO5L 5H / KO5L 1K) =====
 // =============================
 function setupOtherMenu() {
   const menu = document.getElementById("derby-menu");
@@ -153,11 +153,15 @@ function setupOtherMenu() {
     <button id="btn2K" class="active">2K</button>
     <button id="btnOC">OC</button>
     <button id="btn5L">5L</button>
+    <button id="btn5H">KO5L 5H</button>
+    <button id="btn1K">KO5L 1K</button>
   `;
 
   const btn2K = document.getElementById("btn2K");
   const btnOC = document.getElementById("btnOC");
   const btn5L = document.getElementById("btn5L");
+  const btn5H = document.getElementById("btn5H");
+  const btn1K = document.getElementById("btn1K");
 
   function setActive(button) {
     document.querySelectorAll("#derby-menu button").forEach(b => b.classList.remove("active"));
@@ -178,10 +182,23 @@ function setupOtherMenu() {
 
   btn5L.onclick = () => {
     setActive(btn5L);
-    currentSheet = "5L";
+    currentSheet = "KO5L";
     loadSheetWithRange(currentSheet, "A:L");
   };
+
+  btn5H.onclick = () => {
+    setActive(btn5H);
+    currentSheet = "KO5L5H";
+    loadSheetWithRange(currentSheet, "A:K");
+  };
+
+  btn1K.onclick = () => {
+    setActive(btn1K);
+    currentSheet = "KO5L1K";
+    loadSheetWithRange(currentSheet, "A:K");
+  };
 }
+
 
 // =============================
 // ===== Init =====
