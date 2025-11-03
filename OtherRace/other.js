@@ -155,6 +155,9 @@ function setupOtherMenu() {
     <button id="btn5L">5L</button>
     <button id="btn5H">KO5L 5H</button>
     <button id="btn1K">KO5L 1K</button>
+    <button id="btn4L">KO4LAPS</button>
+    <button id="btn4H">KO4L 5H</button>
+    <button id="btn4K">KO4L 1K</button>
   `;
 
   const btn2K = document.getElementById("btn2K");
@@ -162,6 +165,9 @@ function setupOtherMenu() {
   const btn5L = document.getElementById("btn5L");
   const btn5H = document.getElementById("btn5H");
   const btn1K = document.getElementById("btn1K");
+  const btn4L = document.getElementById("btn4L");
+  const btn4H = document.getElementById("btn4H");
+  const btn4K = document.getElementById("btn4K");
 
   function setActive(button) {
     document.querySelectorAll("#derby-menu button").forEach(b => b.classList.remove("active"));
@@ -197,7 +203,27 @@ function setupOtherMenu() {
     currentSheet = "KO5L1K";
     loadSheetWithRange(currentSheet, "A:K");
   };
+
+  // ===== KO4L Series (A–J columns) =====
+  btn4L.onclick = () => {
+    setActive(btn4L);
+    currentSheet = "KO4L";
+    loadSheetWithRange(currentSheet, "A:J");
+  };
+
+  btn4H.onclick = () => {
+    setActive(btn4H);
+    currentSheet = "KO4L5H";
+    loadSheetWithRange(currentSheet, "A:J");
+  };
+
+  btn4K.onclick = () => {
+    setActive(btn4K);
+    currentSheet = "KO4L1K";
+    loadSheetWithRange(currentSheet, "A:J");
+  };
 }
+
 
 
 // =============================
