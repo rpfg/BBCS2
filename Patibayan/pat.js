@@ -13,7 +13,7 @@ const rowsPerPage = 50;
 
 // DOM Elements
 const search = document.querySelector('.search-container');
-const patibayanSection = document.getElementById("patibayan-section"); // ✅ Add this if your HTML wraps the section
+const patibayanSection = document.getElementById("patibayan-section");
 
 // =============================
 // ===== Submenu Functions =====
@@ -48,14 +48,14 @@ async function loadSheet(sheetName) {
   try {
     const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheetName}?key=${API_KEY}`);
     const data = await res.json();
-    if (!data.values) { 
-      tbody.innerHTML = "<tr><td colspan='3'>No data found</td></tr>"; 
-      return; 
+    if (!data.values) {
+      tbody.innerHTML = "<tr><td colspan='3'>No data found</td></tr>";
+      return;
     }
 
     buildPatibayanTable(data.values);
     setActivePatibayan(sheetName);
-  } catch(err) {
+  } catch (err) {
     tbody.innerHTML = "<tr><td colspan='3'>Error loading data</td></tr>";
     console.error(err);
   }
@@ -65,7 +65,6 @@ async function loadSheet(sheetName) {
 function buildPatibayanTable(values) {
   const table = document.getElementById("patibayan-table");
   const thead = table.querySelector("thead");
-  const tbody = table.querySelector("tbody");
 
   // Use first row as header
   const headerRow = values[0].slice(0, 3);
@@ -77,16 +76,16 @@ function buildPatibayanTable(values) {
   });
   thead.appendChild(trHead);
 
+  // Store all data rows
   allRows = values.slice(1).map(r => r.slice(0, 3));
   currentPage = 1;
   renderTablePage(allRows, currentPage);
 }
 
 // =============================
-// ===== Table Rendering & Pagination ====
+// ===== Table Rendering & Pagination ==== 
 function renderTablePage(rows, page) {
-  const table = document.getElementById("patibayan-table");
-  const tbody = table.querySelector("tbody");
+  const tbody = document.querySelector("#patibayan-table tbody");
   tbody.innerHTML = "";
 
   const start = (page - 1) * rowsPerPage;
@@ -106,30 +105,43 @@ function renderTablePage(rows, page) {
   setupPagination(rows, page);
 }
 
+// ----------------- Pagination -----------------
 function setupPagination(rows, activePage) {
   const wrapper = document.getElementById("pagination-wrapper");
   wrapper.innerHTML = "";
   const totalPages = Math.ceil(rows.length / rowsPerPage);
   if (totalPages <= 1) return;
 
+  // Previous button
   const prevBtn = document.createElement("button");
   prevBtn.innerText = "<";
   prevBtn.disabled = activePage === 1;
-  prevBtn.onclick = () => { currentPage--; renderTablePage(allRows, currentPage); };
+  prevBtn.onclick = () => {
+    currentPage--;
+    renderTablePage(getFilteredRows(), currentPage);
+  };
   wrapper.appendChild(prevBtn);
 
+  // Page number buttons
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.innerText = i;
     if (i === activePage) btn.classList.add("active");
-    btn.onclick = () => { currentPage = i; renderTablePage(allRows, currentPage); };
+    btn.onclick = () => {
+      currentPage = i;
+      renderTablePage(getFilteredRows(), currentPage);
+    };
     wrapper.appendChild(btn);
   }
 
+  // Next button
   const nextBtn = document.createElement("button");
   nextBtn.innerText = ">";
   nextBtn.disabled = activePage === totalPages;
-  nextBtn.onclick = () => { currentPage++; renderTablePage(allRows, currentPage); };
+  nextBtn.onclick = () => {
+    currentPage++;
+    renderTablePage(getFilteredRows(), currentPage);
+  };
   wrapper.appendChild(nextBtn);
 }
 
@@ -139,38 +151,54 @@ function setupSearch() {
   const searchInput = document.getElementById("searchInput");
   const clearSearch = document.getElementById("clearSearch");
 
-  searchInput.addEventListener("input", () => {
-    const filter = searchInput.value.toLowerCase();
+  let filteredRows = [...allRows];
+
+  function applySearch() {
+    const filter = searchInput.value.toLowerCase().trim();
+
+    if (!filter) {
+      filteredRows = [...allRows];
+    } else {
+      filteredRows = allRows.filter(row =>
+        row.some(cell => (cell || "").toLowerCase().includes(filter))
+      );
+    }
+
+    currentPage = 1;
+    renderTablePage(filteredRows, currentPage);
+    highlightMatches(filter);
+  }
+
+  function highlightMatches(filter) {
+    if (!filter) return;
     const rows = document.querySelectorAll("#patibayan-table tbody tr");
+    const regex = new RegExp(`(${filter})`, "gi");
 
     rows.forEach(row => {
-      let rowMatch = false;
       row.querySelectorAll("td").forEach(cell => {
-        cell.innerHTML = cell.textContent;
-        if (filter && cell.textContent.toLowerCase().includes(filter)) {
-          const regex = new RegExp(`(${filter})`, "gi");
-          cell.innerHTML = cell.textContent.replace(regex, `<span class="highlight">$1</span>`);
-          rowMatch = true;
-        }
+        const text = cell.textContent;
+        cell.innerHTML = text.replace(regex, `<span class="highlight">$1</span>`);
       });
-      row.style.display = rowMatch || !filter ? "" : "none";
     });
-  });
+  }
 
+  searchInput.addEventListener("input", applySearch);
   clearSearch.addEventListener("click", () => {
     searchInput.value = "";
-    searchInput.dispatchEvent(new Event("input"));
+    applySearch();
   });
+
+  // Expose for pagination to access
+  window.getFilteredRows = () => filteredRows;
 }
 
 // =============================
-// ===== Responsive Search Box (Improved) ====
+// ===== Responsive Search Box ====
 // =============================
 function moveSearch() {
   const raceTableWrapper = document.getElementById('patibayan-table-wrapper');
   if (!search || !patibayanSection || !raceTableWrapper) return;
 
-  // ✅ Only move if not already placed correctly
   const currentParent = search.parentElement;
   if (currentParent !== patibayanSection) {
     patibayanSection.insertBefore(search, raceTableWrapper);
@@ -187,16 +215,14 @@ document.addEventListener("DOMContentLoaded", () => {
   moveSearch();
 });
 
-// ✅ Debounced resize handler (prevents search box closing on mobile)
+// ✅ Debounced resize handler
 let resizeTimeout;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    // 🧠 Skip moveSearch if resize caused by soft keyboard
     const heightDiff = Math.abs(window.innerHeight - document.documentElement.clientHeight);
     if (heightDiff < 100) moveSearch();
   }, 250);
 });
 
-// One-time move on full load
 window.addEventListener('load', moveSearch);
