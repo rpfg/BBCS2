@@ -183,7 +183,7 @@ function buildRaceTable(values, table) {
   const headerIndex = values.findIndex(row => Array.isArray(row) && row[0] === "Rank");
   if (headerIndex === -1) return;
 
-  const headerRow = (values[headerIndex] || []).slice(0, 12);
+  const headerRow = (values[headerIndex] || []).slice(0, 13);
   const theadEl = document.createElement("thead");
   const trHead = document.createElement("tr");
   headerRow.forEach(h => {
@@ -198,7 +198,7 @@ function buildRaceTable(values, table) {
 
   allRows = values.slice(headerIndex + 1)
     .filter(r => Array.isArray(r) && r.slice(0, 12).some(c => c))
-    .map(r => r.slice(0, 12));
+    .map(r => r.slice(0, 13));
   currentPage = 1;
   renderTablePage(allRows, currentPage);
 }
